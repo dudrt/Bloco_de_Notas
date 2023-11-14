@@ -27,8 +27,11 @@ export default function ModificarNota({NotaPosi,ModState}) {
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity onPress={()=>{Salvar()}} style={styles.button_salvar}>
-            <Text style={styles.text_salvar}>Salvar</Text>
+        <TouchableOpacity onPress={()=>{Salvar(), ModState("SHOW_NOTA")}} style={styles.button_salvar}>
+            <Text style={styles.text_salvar}>Salvar e Sair</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ModState("SHOW_NOTA")}}>
+          <Text style={styles.text_salvar}>Cancelar</Text>
         </TouchableOpacity>
         <TextInput
         editable

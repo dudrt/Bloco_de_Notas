@@ -3,7 +3,7 @@ import { TextInput,Text, View,StyleSheet, TouchableOpacity } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function AddNota(){
+function AddNota({ModState}){
 
     const [valorInput, setValorInput] = useState("")
     const [title, setTitle] = useState("")
@@ -55,8 +55,13 @@ function AddNota(){
 
 return(
     <View style={styles.container}>
-        <TouchableOpacity onPress={()=>{Salvar()}} style={styles.button_salvar}>
-            <Text style={styles.text_salvar}>Salvar</Text>
+        <TouchableOpacity onPress={()=>{Salvar(), ModState("SHOW_NOTA")}} 
+        style={styles.button_salvar}>
+            <Text style={styles.text_salvar}>Salvar e Sair</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ModState("SHOW_NOTA")}}
+        style={styles.button_cancelar}>
+          <Text style={styles.text_salvar}>Cancelar</Text>
         </TouchableOpacity>
         <TextInput
         editable
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:"#FFFFFF",
         minWidth:"90%",
-        height:"85%",
+        height:"75%",
         maxWidth:"90%",
         padding:12,
         textAlignVertical: 'top',
@@ -114,21 +119,33 @@ const styles = StyleSheet.create({
         minWidth:"60%",
         maxWidth:"60%",
         marginBottom:"4%",
-        fontSize:18
+        fontSize:18,
+        marginTop:"20%"
     },
     button_salvar:{
         backgroundColor:"#42046F",
         borderRadius:20,
         padding:5,
         position:"absolute",
-        top:"-4.5%",
-        right:"5%",
-        width:"18%",
+        top:"4%",
+        left:"4%",
+        width:"30%",
         justifyContent:"center",
         alignItems:"center"
     },
     text_salvar:{
         fontSize:18,
         color:"#FFFFFF"
+    },
+    button_cancelar:{
+        backgroundColor:"#42046F",
+        borderRadius:20,
+        padding:5,
+        position:"absolute",
+        top:"4%",
+        right:"4%",
+        width:"22%",
+        justifyContent:"center",
+        alignItems:"center"
     }
   });

@@ -32,16 +32,14 @@ export default function App() {
       ): Tela === "SHOW_NOTA" ? (
         <View>
           {/* <View >
-            <TouchableOpacity style={styles.button_add_nota} onPress={() => setTela("ADD_NOTA")}>
-              <Text style={styles.text_add_nota}>Adicionar Nota</Text>
-            </TouchableOpacity>
+
           </View>
           <View style={styles.mostrar_nota_view}> */}
             <MostrarNota Tela={Tela} ModState={ModState} SetNotaMod={SetNotaMod}/>
           {/* </View> */}
         </View>
       ):(
-        <ModificarNota NotaPosi={NotaPosi} SetNotaMod={SetNotaMod}/>
+        <ModificarNota NotaPosi={NotaPosi} ModState={ModState}/>
       )}
     </View>
   );

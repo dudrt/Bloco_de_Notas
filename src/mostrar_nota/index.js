@@ -6,6 +6,8 @@ import Checkbox from 'expo-checkbox';
 
 function MostrarNota({ Tela, ModState, SetNotaMod }) {
 
+    global.infos
+
     const [view, setView] = useState()
     console.log(Tela)
     useEffect(() => {
@@ -29,18 +31,12 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
                 setView(array)
             } else {
                 const infos = JSON.parse(dadosAtuais)
+                global.infos = infos
                 console.log(infos)
                 for (var i = 0; i < infos.length; i++) {
                     array.push(
                         <View style={styles.view_notas}>
                             <Text style={styles.text_view_notas} numberOfLines={1}>{infos[i].titulo}</Text>
-                            <Checkbox
-                                style={styles.checkbox}
-                                color={true ? '#4630EB' : undefined}
-                                value={infos[i].checked}
-                            // onValueChange={Checado(i)}
-                            />
-
                         </View>
 
 
@@ -75,20 +71,35 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.button_add_nota} onPress={() => ModState("ADD_NOTA")}>
+                <Text style={styles.text_add_nota}>Adicionar Nota</Text>
+            </TouchableOpacity>
+
             {view && view.length > 0 ? (
-                <ScrollView style={{ width: "120%", height: "100%" }}>
+                <ScrollView style={{ width: "110%", height: "100%" }}>
                     <View>
                         {view.map((component, index) => (
-                            <TouchableOpacity key={index}
-                            onPress={() => { 
-                                ModState("MOD_TELA"), 
-                                SetNotaMod(index) }} >
+                            <View style={styles.display_views} key={index}>
+                                <TouchableOpacity 
+                                    onPress={() => {
+                                        ModState("MOD_TELA"),
+                                            SetNotaMod(index)
+                                    }} >
 
-                                {component}
-                            </TouchableOpacity>
-
+                                    {component}
+                                </TouchableOpacity>
+                                <Checkbox
+                                    style={styles.checkbox}
+                                    color={true ? '#4630EB' : undefined}
+                                    value={infos[index].checked}
+                                // onValueChange={Checado(i)}
+                                />
+                                <TouchableOpacity style={styles.delete_view}>
+                                    <Text>DEL</Text>
+                                </TouchableOpacity>
+                            </View>
                         ))}
-                    </View>
+                            </View>
                 </ScrollView>
             ) : (
                 <View>
@@ -106,16 +117,30 @@ const styles = StyleSheet.create({
         width: "90%",
         // backgroundColor:"#FFFFFF"
     },
+    button_add_nota: {
+        width: "25%",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#42046F",
+        padding: 3,
+        marginTop: "5%",
+        marginLeft: "5%",
+        borderRadius: 50
+    },
+    text_add_nota: {
+        color: "#FFF",
+        fontSize: 16
+    },
     text: {
         color: "#FFFFFF"
     },
     view_notas: {
-
+        
         flexDirection: "row"
 
     },
     text_view_notas: {
-        width: "80%",
+        width: "85%",
         height: 40,
         borderColor: "#3E3E3E",
         borderStyle: "solid",
@@ -123,9 +148,22 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         justifyContent: "center",
-        marginTop: "3%",
         color: "#FFFFFF",
         marginStart: "3%"
 
+    },
+    display_views:{
+        flexDirection:"row",
+        alignItems:"center",
+        marginTop:"3%"
+    },
+    checkbox:{
+        marginLeft:"-8%"
+    },
+    delete_view:{
+        width:"10%",
+        height:40,
+        backgroundColor:"#FFF",
+        marginStart:"4%"
     }
 })
