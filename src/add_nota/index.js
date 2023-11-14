@@ -14,7 +14,7 @@ function AddNota(){
             const dadosAtuais = await AsyncStorage.getItem('Storage');
             let db = dadosAtuais ? JSON.parse(dadosAtuais) : [];
             
-            let novoItem = {titulo:title,texto:valorInput}
+            let novoItem = {titulo:title,texto:valorInput,checked:false}
 
             if(!Array.isArray(db)){
                 db = []
@@ -28,10 +28,6 @@ function AddNota(){
           } catch (error) {
             console.error('Erro ao salvar no AsyncStorage:', error);
           }
-
-
-
-       
 
     }
 
@@ -56,7 +52,6 @@ function AddNota(){
             console.log("Erro setStorage:"+erro)
         }
     }
-
 
 return(
     <View style={styles.container}>
