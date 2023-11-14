@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Checkbox from 'expo-checkbox';
+import Modal from "react-native-modal";
 
 
 function MostrarNota({ Tela, ModState, SetNotaMod }) {
@@ -9,6 +10,10 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
     global.infos
 
     const [view, setView] = useState()
+    const [modalVisible,setVisibiliy] = useState(false)
+    const [posicaoNotaDel, setPosicaoNotaDel] = useState()
+
+
     console.log(Tela)
     useEffect(() => {
         Start()
@@ -83,7 +88,7 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
                                 <TouchableOpacity 
                                     onPress={() => {
                                         ModState("MOD_TELA"),
-                                            SetNotaMod(index)
+                                        SetNotaMod(index)
                                     }} >
 
                                     {component}
@@ -91,10 +96,11 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
                                 <Checkbox
                                     style={styles.checkbox}
                                     color={true ? '#4630EB' : undefined}
-                                    value={infos[index].checked}
+                                    value={global.infos[index].checked}
                                 // onValueChange={Checado(i)}
                                 />
-                                <TouchableOpacity style={styles.delete_view}>
+                                <TouchableOpacity style={styles.delete_view}
+                                onPress={()=>{setVisibiliy(true),setPosicaoNotaDel(index)}}>
                                     <Text>DEL</Text>
                                 </TouchableOpacity>
                             </View>
@@ -106,6 +112,19 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
                     <Text style={styles.text}>Suas anotações aparecerão aqui.</Text>
                 </View>
             )}
+            <Modal isVisible={modalVisible} style={styles.modal}>{modalVisible ? (
+                <View style={styles.modal_view}>
+                    <Text style={{color:"#FFF"}}>
+                        Você deseja excluir <Text style={{color:"#f9ff4d"}}>{infos[posicaoNotaDel].titulo}</Text> ? 
+                    </Text>
+                    <TouchableOpacity style={styles.modal_btn} onPress={()=>{/*Fazer função para excluir posição*/}}>
+                        <Text style={styles.text_modal}>Confirmar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modal_btn} onPress={()=>{setVisibiliy(false)}}>
+                        <Text style={styles.text_modal}>Voltar</Text>
+                    </TouchableOpacity>
+                </View>
+            ):(<></>)}</Modal>
         </View>
     )
 
@@ -165,5 +184,30 @@ const styles = StyleSheet.create({
         height:40,
         backgroundColor:"#FFF",
         marginStart:"4%"
+    },
+    modal:{
+        marginTop:"60%",
+        flex:0.4,
+        backgroundColor:"#101000",
+        borderRadius:40,
+        padding:"4%"
+    },
+    modal_btn:{
+        marginTop:"5%",
+        width: "40%",
+        borderRadius: 20,
+        padding: 10,
+        alignItems:"center",
+        justifyContent: "center",
+        color: "#FFFFFF",
+        backgroundColor: "#42046F",
+    },
+    text_modal:{
+        color:"#FFF",
+        fontSize:18
+    },
+    modal_view:{
+        justifyContent:"center",
+        alignItems:"center",
     }
 })
