@@ -18,19 +18,24 @@ export default function ModificarNota({NotaPosi,ModState}) {
     const dadosAtuais = await AsyncStorage.getItem('Storage');
     const infos = JSON.parse(dadosAtuais)
 
-
     setTitle(infos[NotaPosi].titulo)
     setValorInput(infos[NotaPosi].texto)
 
-
   }
 
+  const Salvar = async () =>{
+    infos[NotaPosi].titulo = title
+    infos[NotaPosi].texto = valorInput
+
+    await AsyncStorage.setItem('Storage', JSON.stringify(infos));
+
+  }
   return (
     <View style={styles.container}>
         <TouchableOpacity onPress={()=>{Salvar(), ModState("SHOW_NOTA")}} style={styles.button_salvar}>
             <Text style={styles.text_salvar}>Salvar e Sair</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{ModState("SHOW_NOTA")}}>
+        <TouchableOpacity onPress={()=>{ModState("SHOW_NOTA")}} style={styles.button_cancelar}>
           <Text style={styles.text_salvar}>Cancelar</Text>
         </TouchableOpacity>
         <TextInput
@@ -73,7 +78,7 @@ const styles = StyleSheet.create({
       fontSize:16,
       color:"#FFFFFF",
       minWidth:"90%",
-      height:"85%",
+      height:"80%",
       maxWidth:"90%",
       padding:12,
       textAlignVertical: 'top',
@@ -89,7 +94,8 @@ const styles = StyleSheet.create({
       minWidth:"60%",
       maxWidth:"60%",
       marginBottom:"4%",
-      fontSize:18
+      fontSize:18,
+      marginTop:"10%"
   },
   button_salvar:{
       backgroundColor:"#42046F",
@@ -98,13 +104,24 @@ const styles = StyleSheet.create({
       position:"absolute",
       top:"-4.5%",
       right:"5%",
-      width:"18%",
+      width:"30%",
       justifyContent:"center",
       alignItems:"center"
   },
   text_salvar:{
       fontSize:18,
       color:"#FFFFFF"
+  },
+  button_cancelar:{
+    backgroundColor:"#42046F",
+      borderRadius:20,
+      padding:5,
+      position:"absolute",
+      top:"-4.5%",
+      left:"5%",
+      width:"20%",
+      justifyContent:"center",
+      alignItems:"center"
   }
 })
 

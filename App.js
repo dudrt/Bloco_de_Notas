@@ -22,21 +22,11 @@ export default function App() {
       
       {Tela === "ADD_NOTA" ? (
         <View>
-          {/* <View style={styles.button_voltar}>
-            <TouchableOpacity onPress={() => setTela("SHOW_NOTA")}>
-              <Text style={styles.text_voltar}>Voltar</Text>
-            </TouchableOpacity>
-          </View> */}
           <AddNota ModState={ModState}/>
         </View>
       ): Tela === "SHOW_NOTA" ? (
         <View>
-          {/* <View >
-
-          </View>
-          <View style={styles.mostrar_nota_view}> */}
             <MostrarNota Tela={Tela} ModState={ModState} SetNotaMod={SetNotaMod}/>
-          {/* </View> */}
         </View>
       ):(
         <ModificarNota NotaPosi={NotaPosi} ModState={ModState}/>
