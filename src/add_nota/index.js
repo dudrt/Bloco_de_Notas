@@ -10,7 +10,6 @@ function AddNota({ModState}){
 
     const Salvar = async () =>{
         try {
-            // Obtenha os dados atuais do AsyncStorage
             const dadosAtuais = await AsyncStorage.getItem('Storage');
             let db = dadosAtuais ? JSON.parse(dadosAtuais) : [];
             
@@ -20,10 +19,8 @@ function AddNota({ModState}){
                 db = []
             }
 
-            // Adicione o novo item ao array
             db.push(novoItem);
         
-            // Salve o array atualizado de volta no AsyncStorage
             await AsyncStorage.setItem('Storage', JSON.stringify(db));
           } catch (error) {
             console.error('Erro ao salvar no AsyncStorage:', error);
@@ -41,7 +38,7 @@ function AddNota({ModState}){
             return '"db":[]'
         }
       } catch (e) {
-        // error reading value
+        console.log(e)
       }
  }
 

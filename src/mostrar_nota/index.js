@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Image } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Checkbox from 'expo-checkbox';
 import Modal from "react-native-modal";
 
 
@@ -9,7 +8,6 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
 
     global.infos
 
-    const [Checked, isChecked] = useState(false)
     const [view, setView] = useState()
     const [modalVisible, setVisibiliy] = useState(false)
     const [posicaoNotaDel, setPosicaoNotaDel] = useState()
@@ -26,9 +24,7 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
         var array = []
 
         try {
-            // Obtenha os dados atuais do AsyncStorage
             const dadosAtuais = await AsyncStorage.getItem('Storage');
-            // const db = dadosAtuais ? JSON.parse(dadosAtuais) : [];
 
             if (dadosAtuais === "" || dadosAtuais === null) {
                 array.push(<View>
@@ -44,7 +40,6 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
                         <View style={styles.view_notas}>
                             <Text style={[styles.text_view_notas , global.infos[i].checked ? {textDecorationLine: 'line-through',}: {textDecorationLine:"none"}]} numberOfLines={1} ellipsizeMode="tail">{infos[i].titulo}</Text>
                         </View>
-
                     )
                 }
                 setView(array)
@@ -53,8 +48,6 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
             console.error('Erro ao obter do AsyncStorage:', error);
         }
     }
-
-
 
 
     const Checado = async (posicao) => {
@@ -91,10 +84,8 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
                                         ModState("MOD_TELA"),
                                             SetNotaMod(index)
                                     }} >
-
                                     {component}
                                 </TouchableOpacity>
-                                
                                 <TouchableOpacity
                                     onPress={() => Checado(index)}
                                     style={styles.checkboxContainer}
@@ -143,7 +134,6 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
 const styles = StyleSheet.create({
     container: {
         width: "90%",
-        // backgroundColor:"#FFFFFF"
     },
     button_add_nota: {
         width: "40%",
@@ -164,10 +154,7 @@ const styles = StyleSheet.create({
         color: "#FFFFFF"
     },
     view_notas: {
-
         flexDirection: "row",
-        
-
     },
     text_view_notas: {
         
@@ -193,8 +180,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF"
     },
     delete_view: {
-        // width: "10%",
-        // height: 40,
         marginStart: "4%"
     },
     modal: {
@@ -224,7 +209,7 @@ const styles = StyleSheet.create({
     },
     checkboxContainer:{
         marginStart:"-8%",
-        flexDirection: 'row', // Certifique-se de que o flexDirection está configurado corretamente
+        flexDirection: 'row', 
         alignItems: 'center',
         justifyContent:'center',
         width:"8%",
