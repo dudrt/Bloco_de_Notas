@@ -2,7 +2,7 @@ import { useState,useEffect } from 'react';
 import { StyleSheet,TextInput, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function ModificarNota({NotaPosi,ModState}) {
+export default function ModificarNota({NotaPosi,ModState,setAtualizarView}) {
 
   useEffect(() => {
     Start()
@@ -26,7 +26,7 @@ export default function ModificarNota({NotaPosi,ModState}) {
   const Salvar = async () =>{
     infos[NotaPosi].titulo = title
     infos[NotaPosi].texto = valorInput
-
+    setAtualizarView(true)
     await AsyncStorage.setItem('Storage', JSON.stringify(infos));
 
   }
@@ -35,7 +35,7 @@ export default function ModificarNota({NotaPosi,ModState}) {
         <TouchableOpacity onPress={()=>{Salvar(), ModState("SHOW_NOTA")}} style={styles.button_salvar}>
             <Text style={styles.text_salvar}>Salvar e Sair</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{ModState("SHOW_NOTA")}} style={styles.button_cancelar}>
+        <TouchableOpacity onPress={()=>{setAtualizarView(true),ModState("SHOW_NOTA")}} style={styles.button_cancelar}>
           <Text style={styles.text_salvar}>Cancelar</Text>
         </TouchableOpacity>
         <TextInput

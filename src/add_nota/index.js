@@ -3,7 +3,7 @@ import { TextInput,Text, View,StyleSheet, TouchableOpacity } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function AddNota({ModState}){
+function AddNota({ModState,setAtualizarView}){
 
     const [valorInput, setValorInput] = useState("")
     const [title, setTitle] = useState("")
@@ -13,6 +13,17 @@ function AddNota({ModState}){
             const dadosAtuais = await AsyncStorage.getItem('Storage');
             let db = dadosAtuais ? JSON.parse(dadosAtuais) : [];
             
+            console.log(title)
+            if(title===""){
+                console.log("nada escrito")
+            }
+            if(title === "" && valorInput===""){
+                ModState("SHOW_NOTA")
+                return
+            }
+            if(title===""){
+                setTitle("Sem titulo.")
+            }
             let novoItem = {titulo:title,texto:valorInput,checked:false}
 
             if(!Array.isArray(db)){
@@ -20,7 +31,6 @@ function AddNota({ModState}){
             }
 
             db.push(novoItem);
-        
             await AsyncStorage.setItem('Storage', JSON.stringify(db));
           } catch (error) {
             console.error('Erro ao salvar no AsyncStorage:', error);
@@ -28,35 +38,35 @@ function AddNota({ModState}){
 
     }
 
-    const getStorage = async () =>{
-    try {
-        const valor = await AsyncStorage.getItem('Storage');
-        if (valor !== null) {
-          return valor
-        }else{
-            await AsyncStorage.setItem('Storage', '"db":[]');
-            return '"db":[]'
-        }
-      } catch (e) {
-        console.log(e)
-      }
- }
+//     const getStorage = async () =>{
+//     try {
+//         const valor = await AsyncStorage.getItem('Storage');
+//         if (valor !== null) {
+//           return valor
+//         }else{
+//             await AsyncStorage.setItem('Storage', '"db":[]');
+//             return '"db":[]'
+//         }
+//       } catch (e) {
+//         console.log(e)
+//       }
+//  }
 
-    const setStorage = async (infos) =>{
-        try{
-            await AsyncStorage.setItem('Storage', infos);
-        }catch (erro){
-            console.log("Erro setStorage:"+erro)
-        }
-    }
+//     const setStorage = async (infos) =>{
+//         try{
+//             await AsyncStorage.setItem('Storage', infos);
+//         }catch (erro){
+//             console.log("Erro setStorage:"+erro)
+//         }
+//     }
 
 return(
     <View style={styles.container}>
-        <TouchableOpacity onPress={()=>{Salvar(), ModState("SHOW_NOTA")}} 
+        <TouchableOpacity onPress={()=>{setAtualizarView(true),Salvar(), ModState("SHOW_NOTA")}} 
         style={styles.button_salvar}>
             <Text style={styles.text_salvar}>Salvar e Sair</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{ModState("SHOW_NOTA")}}
+        <TouchableOpacity onPress={()=>{setAtualizarView(true),ModState("SHOW_NOTA")}}
         style={styles.button_cancelar}>
           <Text style={styles.text_salvar}>Cancelar</Text>
         </TouchableOpacity>

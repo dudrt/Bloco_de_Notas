@@ -4,51 +4,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from "react-native-modal";
 
 
-function MostrarNota({ Tela, ModState, SetNotaMod }) {
-
+function MostrarNota({ Tela, ModState, SetNotaMod, setAtualizarView, AtualizarView }) {
+    
     global.infos
 
     const [view, setView] = useState()
     const [modalVisible, setVisibiliy] = useState(false)
     const [posicaoNotaDel, setPosicaoNotaDel] = useState()
 
-
-    console.log(Tela)
     useEffect(() => {
-        Start()
-    }, []);
+        if (AtualizarView) {
+            Start()
+            setAtualizarView(false)
+        }
+    }, [AtualizarView]);
 
     const Start = async () => {
-        console.log("rodou")
         setView()
-        var array = []
 
         try {
+            var array = []
             const dadosAtuais = await AsyncStorage.getItem('Storage');
 
-            if (dadosAtuais === "" || dadosAtuais === null) {
-                array.push(<View>
-                    <Text>Suas anotações aparecerão aqui.</Text>
-                </View>)
-                setView(array)
+            if (dadosAtuais === "" || dadosAtuais === null || dadosAtuais === undefined) {
+
+                setView("")
+                console.log("rodou")
+
             } else {
                 const infos = JSON.parse(dadosAtuais)
                 global.infos = infos
-                console.log(infos)
                 for (var i = 0; i < infos.length; i++) {
                     array.push(
                         <View style={styles.view_notas}>
-                            <Text style={[styles.text_view_notas , global.infos[i].checked ? {textDecorationLine: 'line-through',}: {textDecorationLine:"none"}]} numberOfLines={1} ellipsizeMode="tail">{infos[i].titulo}</Text>
+                            <Text style={[styles.text_view_notas, global.infos[i].checked ? { textDecorationLine: 'line-through', } : { textDecorationLine: "none" }]} numberOfLines={1} ellipsizeMode="tail">{infos[i].titulo}</Text>
                         </View>
                     )
                 }
                 setView(array)
             }
         } catch (error) {
+            array.push(<View>
+                <Text>Suas anotações aparecerão aqui.</Text>
+            </View>)
+            setView(array)
             console.error('Erro ao obter do AsyncStorage:', error);
         }
     }
-
 
     const Checado = async (posicao) => {
         const dadosAtuais = await AsyncStorage.getItem('Storage');
@@ -57,9 +59,7 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
         infos[posicao].checked = !infos[posicao].checked
 
         await AsyncStorage.setItem('Storage', JSON.stringify(infos));
-        console.log(infos)
         Start()
-
     }
     const DeleteNota = async (posicao) => {
         const dadosAtuais = await AsyncStorage.getItem('Storage');
@@ -77,38 +77,38 @@ function MostrarNota({ Tela, ModState, SetNotaMod }) {
             </TouchableOpacity>
             {view && view.length > 0 ? (
                 <ScrollView style={{ width: "110%", height: "100%" }}>
-                        {view.map((component, index) => (
-                            <View style={styles.display_views} key={index}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        ModState("MOD_TELA"),
-                                            SetNotaMod(index)
-                                    }} >
-                                    {component}
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => Checado(index)}
-                                    style={styles.checkboxContainer}
-                                >
-                                    <View style={styles.checkboxOverlay}>
-                                            {global.infos[index].checked ? (
-                                            <Text style={styles.text_check}>✔</Text>) : (
-                                                <Text></Text>
-                                            )}
-                                    </View>
-                                </TouchableOpacity>
+                    {view.map((component, index) => (
+                        <View style={styles.display_views} key={index}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    ModState("MOD_TELA"),
+                                        SetNotaMod(index)
+                                }} >
+                                {component}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => Checado(index)}
+                                style={styles.checkboxContainer}
+                            >
+                                <View style={styles.checkboxOverlay}>
+                                    {global.infos[index].checked ? (
+                                        <Text style={styles.text_check}>✔</Text>) : (
+                                        <Text></Text>
+                                    )}
+                                </View>
+                            </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.delete_view}
-                                    onPress={() => { setVisibiliy(true), setPosicaoNotaDel(index) }}>
-                                        <Text style={{fontSize:30}}>🗑️</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    
+                            <TouchableOpacity style={styles.delete_view}
+                                onPress={() => { setVisibiliy(true), setPosicaoNotaDel(index) }}>
+                                <Text style={{ fontSize: 30 }}>🗑️</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+
                 </ScrollView>
             ) : (
-                <View>
-                    <Text style={styles.text}>Suas anotações aparecerão aqui.</Text>
+                <View style={styles.view_notas_false}>
+                    <Text style={styles.text_notas_false}>Suas notas aparecerão aqui!</Text>
                 </View>
             )}
 
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     },
     button_add_nota: {
         width: "40%",
-        height: "6%",
+        height: "50",
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#42046F",
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     text_view_notas: {
-        
+
         width: "80%",
         height: 40,
         borderColor: "#3E3E3E",
@@ -207,19 +207,28 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    checkboxContainer:{
-        marginStart:"-8%",
-        flexDirection: 'row', 
+    checkboxContainer: {
+        marginStart: "-8%",
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent:'center',
-        width:"8%",
-        height:"80%",
+        justifyContent: 'center',
+        width: "8%",
+        height: "80%",
         borderColor: "#3E3E3E",
         borderStyle: "solid",
         borderWidth: 2,
-      },
-      text_check:{
-        fontSize:22,
+    },
+    text_check: {
+        fontSize: 22,
+        color: "#FFF"
+    },
+    view_notas_false:{
+        marginTop:40,
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    text_notas_false:{
+        fontSize:20,
         color:"#FFF"
-      }
+    }
 })

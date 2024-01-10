@@ -8,6 +8,7 @@ import ModificarNota from './src/mod_nota';
 export default function App() {
 
   const [Tela, setTela] = useState("SHOW_NOTA")
+  const [AtualizarView, setAtualizarView] = useState(true)
   const [NotaPosi, setNotaPosi] = useState(0)
 
   const ModState = async (valor) =>{
@@ -16,20 +17,23 @@ export default function App() {
   const SetNotaMod = async (valor) =>{
     setNotaPosi(valor)
   }
+  const SetAtualizarView = async(valor) =>{
+    setAtualizarView(valor)
+  }
 
   return (
     <View style={styles.container}>
       
       {Tela === "ADD_NOTA" ? (
         <View>
-          <AddNota ModState={ModState}/>
+          <AddNota ModState={ModState} setAtualizarView={SetAtualizarView}/>
         </View>
       ): Tela === "SHOW_NOTA" ? (
         <View>
-            <MostrarNota Tela={Tela} ModState={ModState} SetNotaMod={SetNotaMod}/>
+            <MostrarNota Tela={Tela} ModState={ModState} setAtualizarView={SetAtualizarView} AtualizarView={AtualizarView} SetNotaMod={SetNotaMod}/>
         </View>
       ):(
-        <ModificarNota NotaPosi={NotaPosi} ModState={ModState}/>
+        <ModificarNota NotaPosi={NotaPosi} ModState={ModState} setAtualizarView={SetAtualizarView}/>
       )}
     </View>
   );
